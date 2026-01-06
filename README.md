@@ -116,13 +116,10 @@ Ensure a matching credential record exists and is readable by the app.
 ### 2) Ensure group ownership mapping works (recommended)
 
 `serviceBatchSync` attempts to set `ownedBy.targetName` on xMatters services using the ServiceNow group name (e.g., `Software`).  
-If the group does not exist in xMatters, it falls back to:
-
-- Default owner group: NONE
+If the group does not exist in xMatters the service will exist but not be owned in xMatters.
 
 Ensure:
 - The xMatters groups you want to map exist and are **ACTIVE**
-- (Optional) `Unassigned Services` exists in xMatters if you want the fallback owner behavior
 
 ---
 
@@ -132,8 +129,7 @@ Ensure:
 **Business Rule:** `xM Service Sync - Insert/Update` on `cmdb_ci_service`  
 Runs **after insert/update** when:
 
-- `support_group` **is not empty**
-- `used_for` = **Production** (as encoded in the BR filter)
+- `used_for` **is 'Production'**
 
 Behavior:
 - Queues event `x_xma_eb_fd.service.sync`
@@ -151,9 +147,6 @@ Runs **before delete**:
 ### B) Batch (Scheduled Job)
 Scheduled job: `xMatters Service Batch Sync` (optional)  
 Calls into `serviceBatchSync` to reconcile services in bulk.
-
-**Note:** In the exported update set, the scheduled job script expects `serviceBatchSync.run()` to return a summary object.  
-If you keep the current `serviceBatchSync.run()` implementation, update the job script to just call `sync.run();`.
 
 ---
 
