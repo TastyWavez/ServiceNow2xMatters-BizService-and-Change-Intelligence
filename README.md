@@ -1,4 +1,4 @@
-# ServiceNow → xMatters Service Center + Change Intelligence Sync
+# ServiceNow → xMatters Services + Change Intelligence Sync
 
 This repository contains ServiceNow update sets that synchronize:
 
