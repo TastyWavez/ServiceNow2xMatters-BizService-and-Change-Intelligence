@@ -118,7 +118,7 @@ Ensure a matching credential record exists and is readable by the app.
 `serviceBatchSync` attempts to set `ownedBy.targetName` on xMatters services using the ServiceNow group name (e.g., `Software`).  
 If the group does not exist in xMatters, it falls back to:
 
-- Default owner group: `Unassigned Services`
+- Default owner group: NONE
 
 Ensure:
 - The xMatters groups you want to map exist and are **ACTIVE**
