@@ -5,8 +5,6 @@ This repository contains ServiceNow update sets that synchronize:
 1. **CMDB Business Services** (`cmdb_ci_service`) → **xMatters Services**
 2. **Change Requests** (`change_request`) → **xMatters Change Intelligence change records** (`POST /changes`)
 
-The integration uses an **eventQueue → Script Action → Script Include** pattern for asynchronous processing, plus optional scheduled batch jobs for backfill/reconciliation.
-
 ---
 
 ## Contents (Update Sets)
