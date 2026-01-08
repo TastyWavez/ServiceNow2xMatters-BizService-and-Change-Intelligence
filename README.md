@@ -161,7 +161,7 @@ Default in XML is **on_demand** and queues events for recently closed changes:
 
 ```js
 new x_xma_eb_fd.changeBatchSync().runBatch({
-  lookbackDays: 365,
+  lookbackDays: 100,
   maxToQueue: 10000,
   dryRun: false
 });
