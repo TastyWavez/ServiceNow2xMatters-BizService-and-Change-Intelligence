@@ -1,4 +1,4 @@
-# ServiceNow → xMatters Services + Change Intelligence Sync
+# ServiceNow to xMatters: Business Service (cmdb_ci_service) + Change Intelligence Sync (change_request)
 
 This repository contains ServiceNow update sets that synchronize:
 
@@ -17,7 +17,6 @@ Includes:
   - `xmApiClient`, `xm_logger`
   - `serviceBatchSync` (ServiceNow services → xMatters services)
   - `changeBatchSync` (ServiceNow change_request → xMatters /changes)
-  - `changeIntelligenceSync` (present but not required by the current BR path)
 - Business Rules:
   - `xM Service Sync - Insert/Update` (cmdb_ci_service)
   - `xM Service Sync - Delete` (cmdb_ci_service)
@@ -26,12 +25,11 @@ Includes:
   - `x_xma_eb_fd.service.sync`
   - `x_xma_eb_fd.service.delete`
   - `x_xma_eb_fd.change.sync`
-  - `x_xma_eb_fd.change.create` (not used by default BR flow)
 - Script Actions:
   - `xM Service Sync`, `xM Service Delete`
   - `xM Change Sync`, `xM Change Sync create`
 - App table:
-  - `x_xma_eb_fd_xm_change_map` (idempotency map for /changes)
+  - `x_xma_eb_fd_xm_change_map` (record keeping, ensures changes only sync once)
 - System property:
   - `x_xma_eb_fd.service_and_change_sync_credential_name` (default: `xMattersServiceSync`)
 - Cross-scope privileges needed by the app (included in update set):
@@ -69,20 +67,13 @@ Creates scheduled job:
   - **Change Intelligence** 
 - API access and credentials/token configured
 
-xMatters API references used by this integration:
-- **Services:** Create/modify via `POST /services` and delete via `DELETE /services/{serviceId}` (serviceId can be UUID or name/target name).  
-- **Change Intelligence:** Create change records via `POST /changes`. Change records **cannot be modified or deleted** once created.  
-  (See xMatters REST API Reference.)  
-  - `POST /changes` returns `201 Created` with a Change object.  
-  - Change records are immutable once created.  
-
 ---
 
 ## Installation (Import Update Sets)
 
 Import and commit update sets in this order:
 
-1. **Core:** `xMattersServiceCenter4.xml`
+1. **Core:** `xMattersServiceCenter.xml`
 2. **Service batch job (optional):** `xMatters_Service_Batch_Sync.xml`
 3. **Change batch job (optional):** `xMatters_Change_Intelligence_Batch_Queue.xml`
 
