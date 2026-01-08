@@ -58,8 +58,8 @@ Creates scheduled job:
   - `cmdb_ci_service` (Business Services)
   - `change_request`
 - App scope:
-  - Objects are delivered in scope **`x_xma_eb_fd`**
-- Network connectivity from ServiceNow MID/server-side outbound to xMatters API
+  - Update sets are in scope of Everbridge Flow Designer ServiceNow application **`x_xma_eb_fd`** thus the app must be installed. 
+  - Network connectivity from ServiceNow MID/server-side outbound to xMatters API
 
 ### xMatters
 - xMatters tenant with:
