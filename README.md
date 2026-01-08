@@ -157,11 +157,11 @@ Behavior:
 
 ### B) Batch (Scheduled Queue Job)
 Scheduled job: `xMatters Change Intelligence Batch Queue` (optional)  
-Default in XML is **on_demand** and queues events for recently closed changes:
+Default in XML is **on_demand** and queues events for recently closed changes, adjust 'lookbackDays' and 'maxToQueue' variables as needed:
 
 ```js
 new x_xma_eb_fd.changeBatchSync().runBatch({
   lookbackDays: 100,
-  maxToQueue: 10000,
+  maxToQueue: 1000,
   dryRun: false
 });
