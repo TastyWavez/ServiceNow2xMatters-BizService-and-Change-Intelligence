@@ -10,7 +10,7 @@ This repository contains ServiceNow update sets that synchronize:
 ## Contents (Update Sets)
 
 ### 1) Core integration (required)
-**File:** `xMattersServiceCenter4.xml`
+**File:** `xMattersServiceCenter.xml`
 
 Includes:
 - Script Includes:
