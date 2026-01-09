@@ -1,5 +1,14 @@
 # ServiceNow to xMatters: Business Service (cmdb_ci_service) + Change Intelligence Sync (change_request)
 
+These changes enable Major Incident Managers, SREs and Devops teams to do more with services in xMatters and ServiceNow. If you’re using the Everbridge Flow Designer (EBFD) app in ServiceNow alongside xMatters, you'll benefit from shared context by having the same service names, ownership, and change history show up in the places where people are actively working on responding to and resolving incidents. With these changes you can bridge the gap between impacted services and ownership bringing clarity to Incident Commanders when delegating resolver responsibilities. Services can be connected to xMatters StatusPages and be updated throughout the incident lifecycle from initial impact to resolution  all while keeping stakeholders informed.
+
+What you get by syncing Services and Changes (CMDB → xMatters)
+
+- A service catalog that incident workflows can take advantage of. In xMatters Incident Management, impacted services can be connected to an incident during initiation so the incident starts with the appropriate impacted service context. 
+- Services can also be notified and will engage the responsible support group. Allowing Incident Commanders to focus on "what" is impacted rather than "who" do I need to notify. 
+- The service record in xMatters links back to the ServiceNow CI, responders can pivot straight into the CMDB record without hunting by clicking the related service link in the xMatters service view. 
+- Change context allows teams to review recent changes to identify potential root causes for an incident. 
+
 This repository contains ServiceNow update sets that synchronize:
 
 1. **CMDB Business Services** (`cmdb_ci_service`) → **xMatters Services**
@@ -7,12 +16,12 @@ This repository contains ServiceNow update sets that synchronize:
 
 ---
 
-## Contents (Update Sets)
+## Update Sets
 
-### 1) Core integration (required)
+### 1) Main Update Set
 **File:** `xMattersServiceCenter.xml`
 
-Includes:
+**Includes:**
 - Script Includes:
   - `xmApiClient`, `xm_logger`
   - `serviceBatchSync` (ServiceNow services → xMatters services)
@@ -29,9 +38,9 @@ Includes:
   - `xM Service Sync`, `xM Service Delete`
   - `xM Change Sync`, `xM Change Sync create`
 - App table:
-  - `x_xma_eb_fd_xm_change_map` (record keeping, ensures changes only sync once)
+  - `x_xma_eb_fd_xm_change_map` (record keeping, which ensures changes only sync once when closed.)
 - System property:
-  - `x_xma_eb_fd.service_and_change_sync_credential_name` (default: `xMattersServiceSync`)
+  - `x_xma_eb_fd.service_and_change_sync_credential_name` (default: `xMattersServiceSync` update to use a configured credential from the EBFD application.)
 - Cross-scope privileges needed by the app (included in update set):
   - `GlideRecord.setWorkflow`
   - Read `change_request`
@@ -41,13 +50,13 @@ Includes:
 **File:** `xMatters_Service_Batch_Sync.xml`
 
 Creates scheduled job:
-- `xMatters Service Batch Sync` (default run type: **on_demand**)
+- `xMatters Service Batch Sync` (Run Type: **on_demand** but can be set to run at a specified interval (not recommended))
 
 ### 3) Change batch queue job (optional)
 **File:** `xMatters_Change_Intelligence_Batch_Queue.xml`
 
 Creates scheduled job:
-- `xMatters Change Intelligence Batch Queue` (default run type: **on_demand**)
+- `xMatters Change Intelligence Batch Queue` (Run Type: **on_demand** but can be set to run at a specified interval (not recommended))
 
 ---
 
@@ -58,7 +67,7 @@ Creates scheduled job:
   - `cmdb_ci_service` (Business Services)
   - `change_request`
 - App scope:
-  - Update sets are in scope of Everbridge Flow Designer ServiceNow application **`x_xma_eb_fd`** thus the app must be installed. 
+  - Update sets are in scope of Everbridge Flow Designer ServiceNow application **`x_xma_eb_fd`** thus the EBFD application must be installed in ServiceNow. 
   - Network connectivity from ServiceNow MID/server-side outbound to xMatters API
 
 ### xMatters
@@ -102,13 +111,12 @@ Ensure a matching credential record exists and is readable by the app.
 
 > The credential record name must match the property value, or update the property accordingly.
 
-### 2) Ensure group ownership mapping works (recommended)
+### 2) Check group ownership mapping works (recommended)
 
 `serviceBatchSync` attempts to set `ownedBy.targetName` on xMatters services using the ServiceNow group name (e.g., `Software`).  
-If the group does not exist in xMatters the service will exist but not be owned in xMatters.
+If the group does not exist in xMatters the service will exist but not be owned in xMatters, it will be orphaned.
 
-Ensure:
-- The xMatters groups you want to map exist and are **ACTIVE**
+For the best results, ensure the ServiceNow groups you want to map as xMatters service owners exist and are **ACTIVE** in xMatters. 
 
 ---
 
