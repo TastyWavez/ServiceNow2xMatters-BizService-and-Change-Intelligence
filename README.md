@@ -1,5 +1,10 @@
 # ServiceNow to xMatters: Business Service (cmdb_ci_service) + Change Intelligence Sync (change_request)
 
+This repository contains ServiceNow update sets that synchronize:
+
+1. **CMDB Business Services** (`cmdb_ci_service`) → **xMatters Services**
+2. **Change Requests** (`change_request`) → **xMatters Change Intelligence change records** (`POST /changes`)
+
 These changes enable Major Incident Managers, SREs and Devops teams to do more with services in xMatters and ServiceNow. If you’re using the Everbridge Flow Designer (EBFD) app in ServiceNow alongside xMatters, you'll benefit from shared context by having the same service names, ownership, and change history show up in the places where people are actively working on responding to and resolving incidents. With these changes you can bridge the gap between impacted services and ownership bringing clarity to Incident Commanders when delegating resolver responsibilities. Services can be connected to xMatters StatusPages and be updated throughout the incident lifecycle from initial impact to resolution  all while keeping stakeholders informed.
 
 What you get by syncing Services and Changes (CMDB → xMatters)
@@ -8,11 +13,6 @@ What you get by syncing Services and Changes (CMDB → xMatters)
 - Services can also be notified and will engage the responsible support group. Allowing Incident Commanders to focus on "what" is impacted rather than "who" do I need to notify. 
 - The service record in xMatters links back to the ServiceNow CI, responders can pivot straight into the CMDB record without hunting by clicking the related service link in the xMatters service view. 
 - Change context allows teams to review recent changes to identify potential root causes for an incident. 
-
-This repository contains ServiceNow update sets that synchronize:
-
-1. **CMDB Business Services** (`cmdb_ci_service`) → **xMatters Services**
-2. **Change Requests** (`change_request`) → **xMatters Change Intelligence change records** (`POST /changes`)
 
 ---
 
