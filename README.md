@@ -166,10 +166,106 @@ Behavior:
 ### B) Batch (Scheduled Queue Job)
 Scheduled job: `xMatters Change Intelligence Batch Queue` (optional)  
 Default in XML is **on_demand** and queues events for recently closed changes, adjust 'lookbackDays' and 'maxToQueue' variables as needed:
-
 ```js
 new x_xma_eb_fd.changeBatchSync().runBatch({
   lookbackDays: 100,
   maxToQueue: 1000,
   dryRun: false
 });
+```
+---
+
+## Testing
+
+Use the steps below to validate the **Scheduled Jobs** and **Business Rules** included in this integration.
+
+---
+
+### Scheduled Jobs
+
+#### xMatters Service Batch Sync
+
+**Testing:** Bulk-sync all *Production* Business Services (`cmdb_ci_service`) from ServiceNow to xMatters.
+
+1. In ServiceNow, go to **System Definition → Scheduled Jobs**.
+2. Open **xMatters Service Batch Sync**.
+3. Click **Execute Now**.
+4. Open **System Logs → All** and confirm the run completed successfully (no REST/auth/payload errors).
+5. In xMatters, confirm Services exist/updated for the expected Production Business Services.
+
+**Expected results**
+- All qualifying Business Services are created/updated in xMatters.
+
+---
+
+#### xMatters Change Intelligence Batch Queue
+
+**Testing:** Backfill closed Change Requests that may have missed real-time processing.
+
+1. In ServiceNow, go to **System Definition → Scheduled Jobs**.
+2. Open **xMatters Change Intelligence Batch Queue**.
+3. Click **Execute Now**.
+4. Open **System Logs → All** and confirm changes were processed successfully.
+5. In xMatters, confirm closed Change Requests appear as Change Intelligence records.
+
+**Expected Results**
+- Closed Changes are synced without duplicates.
+  
+---
+
+### Business Rules
+
+#### Business Service Insert / Update
+
+**Table:** `cmdb_ci_service`  
+**Condition:** `used_for = Production`
+
+1. Create a new Business Service with **Used for = Production**.
+2. Save the record.
+3. Verify a corresponding Service is created in xMatters.
+4. Update a mapped field (e.g., **Name** or ownership/support group if mapped).
+5. Verify the update is reflected in xMatters.
+
+**Expected results**
+- Only Production Business Services trigger synchronization.
+
+---
+
+#### Business Service Delete
+
+**Table:** `cmdb_ci_service`
+
+1. Delete a Business Service that meets the sync condition (e.g., **Used for = Production**).
+2. Review **System Logs → All** to confirm the delete flow executed successfully.
+3. Verify the corresponding Service is removed (or deactivated, depending on implementation) in xMatters.
+
+**Expected results**
+- Deleted Business Services are removed/deactivated in xMatters.
+
+---
+
+#### Change Request Close
+
+**Table:** `change_request`  
+**Trigger:** Change transitions to a closed state (e.g., `closed_at` populated)
+
+1. Create a new Change Request.
+2. Transition the Change to a closed state.
+3. Verify a Change Intelligence record appears in xMatters for the closed Change.
+4. Re-open the Change and close it again.
+5. Verify the integration does **not** create a duplicate Change Intelligence record.
+
+**Expected results**
+- Each Change is synced once upon closure.
+- No duplicates are created.
+
+---
+
+### Validation Checklist
+
+- Scheduled jobs execute successfully via **Execute Now**
+- Business Rules trigger only under expected conditions
+- No duplicate Services created in xMatters
+- No duplicate Change Intelligence records created
+- Errors (if any) are visible and actionable in ServiceNow logs
+
